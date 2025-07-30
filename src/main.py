@@ -58,15 +58,15 @@ def generate_page(from_path, template_path, dest_path,basepath):
     title = extract_title_markdown(md)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
-    import re
+    
 
     if basepath == '/':
         template = template.replace('href="/', 'href="/')
-        template = template.replace('src="/',  'src="/')
+        template = template.replace('src="/', 'src="/')
     else:
-        
-        template = re.sub(r'href="/', f'href="{basepath}', template)
-        template = re.sub(r'src="/', f'src="{basepath}', template)
+    # This ensures ONLY ONE slash between basepath and the rest—no doubles ever!
+        template = re.sub(r'href="/([^"]+)"', lambda m: f'href="{basepath}/{m.group(1)}"', template)
+        template = re.sub(r'src="/([^"]+)"', lambda m: f'src="{basepath}/{m.group(1)}"', template)
       
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     output_file = open(dest_path, 'w')
