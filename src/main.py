@@ -5,12 +5,14 @@ from textnode import TextNode, TextType
 from extract_markdown import extract_title_markdown
 import os
 from block_to_html import markdown_to_html_node
+import re
 
 def main():
     if len(sys.argv)>1:
         base_path = sys.argv[1]
     else:
         base_path = '/'
+    print(base_path)
     remove_dir('docs')
     copy_folder('static', 'docs')
     auto_generation('content', 'docs', base_path)
@@ -56,9 +58,16 @@ def generate_page(from_path, template_path, dest_path,basepath):
     title = extract_title_markdown(md)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
-    template = template.replace('href="/', f'href="{basepath}')
-    template = template.replace('src="/', f'src="{basepath}')
-# Inside your function:
+    import re
+
+    if basepath == '/':
+        template = template.replace('href="/', 'href="/')
+        template = template.replace('src="/',  'src="/')
+    else:
+        
+        template = re.sub(r'href="/', f'href="{basepath}/', template)
+        template = re.sub(r'src="/', f'src="{basepath}/', template)
+      
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     output_file = open(dest_path, 'w')
     output_file.write(template)
