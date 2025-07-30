@@ -65,8 +65,8 @@ def generate_page(from_path, template_path, dest_path,basepath):
         template = template.replace('src="/',  'src="/')
     else:
         
-        template = re.sub(r'href="/', f'href="{basepath}/', template)
-        template = re.sub(r'src="/', f'src="{basepath}/', template)
+        template = re.sub(r'href="/', f'href="{basepath}', template)
+        template = re.sub(r'src="/', f'src="{basepath}', template)
       
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     output_file = open(dest_path, 'w')
